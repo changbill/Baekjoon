@@ -28,19 +28,7 @@ public class Main {
     static int cnt;
     static int[] delI;
     static int[] delJ;
-    public static void delta(int r, int c) {
-        for (int i = 0; i < 4; i++) {
-            int nr = r + delI[i];
-            int nc = c + delJ[i];
-            if (nr >= 0 && nr < N && nc >= 0 && nc < N && Arr[nr][nc] == 1) {
-                Arr[r][c] = 0;
-                cnt++;
-                delta(nr, nc);
-            }
-        }
-    }
-
-
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
