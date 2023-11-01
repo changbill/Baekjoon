@@ -19,23 +19,24 @@ public class Main {
 
         Arrays.sort(arr);           // 정렬
 
+        // 투 포인터
         for(int i = 0; i<N; i++) {
-            int left = 0;
-            int right = N-1;
-            while(left < right) {
-                if(left == i) {
-                    left++;
+            int left = 0;                   // 왼쪽 포인터
+            int right = N-1;                // 오른쪽 포인터 
+            while(left < right) {           // 왼쪽 포인터보다 오른쪽이 큰데까지만
+                if(left == i) {             // 만일 구하는 값과 동일한 인덱스라면
+                    left++;                 // 넘어간다
                     continue;
                 } else if(right == i) {
                     right--;
                     continue;
                 }
-                if(arr[left] + arr[right] < arr[i]) {
-                    left++;
-                } else if(arr[left] + arr[right] > arr[i]) {
-                    right--;
-                } else {
-                    cnt++;
+                if(arr[left] + arr[right] < arr[i]) {   // 두 포인터의 합이 구하려는 값보다 작다면
+                    left++;                             // 왼쪽 포인터를 +1해준다 ( 더 큰 값으로)
+                } else if(arr[left] + arr[right] > arr[i]) { // 두 포인터의 합이 구하려는 값보다 크다면
+                    right--;                                // 오른쪽 포인터를 -1해준다 ( 더 작은 값으로)
+                } else {                                // 두 포인터의 합이 구하려는 값과 동일하다면
+                    cnt++;                              // cnt + 1
                     break;
                 }
             }
