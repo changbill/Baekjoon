@@ -12,7 +12,7 @@ public class Main {
         }
     }
 
-    static int N, NArr[][], copyArr[][], size, stack, time, locR, locC;
+    static int N, NArr[][], size, stack, time, locR, locC;
     static int delR[] = {-1,0,0,1};
     static int delC[] = {0,-1,1,0};
     static boolean flag[][];
@@ -23,7 +23,6 @@ public class Main {
 
         N = Integer.parseInt(br.readLine());
         NArr = new int[N+1][N+1];
-        copyArr = new int[N+1][N+1];
         size = 2;
         stack = 0;
         time = 0;
@@ -33,7 +32,6 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             for(int c = 1; c <= N; c++) {
                 NArr[r][c] = Integer.parseInt(st.nextToken());
-                copyArr[r][c] = NArr[r][c];
                 if(NArr[r][c] == 9) {
                     locR = r;
                     locC = c;
@@ -42,9 +40,7 @@ public class Main {
             }
         }
 
-        while(true) {
-            if(!bfs(locR, locC)) break;
-        }
+        while(bfs(locR, locC)) {}
 
         System.out.println(time);
     }
