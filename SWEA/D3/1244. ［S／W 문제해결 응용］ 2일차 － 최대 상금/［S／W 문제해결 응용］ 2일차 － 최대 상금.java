@@ -4,9 +4,8 @@ import java.io.*;
 class Solution
 {
     static char[] cards;
-    static int N, len;
-    static String answer;
-    static boolean[][] dp;
+    static int N, len, answer;
+    static boolean[][] visited = new boolean[11][1000000];
     
     public static void main(String args[]) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,17 +14,14 @@ class Solution
         StringBuilder sb = new StringBuilder();
 
         for(int t = 1; t <= T; t++) {
-            answer = "0";
+            answer = 0;
             st = new StringTokenizer(br.readLine());
             cards = st.nextToken().toCharArray();
             N = Integer.parseInt(st.nextToken());
             len = cards.length;
-            int x = 1;
-            for(int i = 0; i < len; i++) {
-            	x *= 10;
+            for(int i = 0; i <= N; i++) {
+            	Arrays.fill(visited[i], false);
             }
-            
-            dp = new boolean[N+1][x];
             
             dfs(0);
             
@@ -35,9 +31,12 @@ class Solution
     }
     
     static void dfs(int depth) {
+        int now = Integer.parseInt(new String(cards));
+        if(visited[depth][now]) return;
+        visited[depth][now] = true;
+        
     	if(depth == N) {
-            String str = toString(cards);
-            answer = answer.compareTo(str) >= 0 ? answer : str;
+            answer = Math.max(answer, now);
         	return;
         }
         
@@ -46,13 +45,6 @@ class Solution
                 char tmp = cards[i];
                 cards[i] = cards[j];
                 cards[j] = tmp;
-                String str = toString(cards);
-                if(dp[depth][Integer.parseInt(str)]) {
-                    cards[j] = cards[i];
-                	cards[i] = tmp;
-                    continue;
-                }
-                dp[depth][Integer.parseInt(str)] = true;
                 
             	dfs(depth+1);
                 
@@ -60,13 +52,5 @@ class Solution
                 cards[i] = tmp;
             }
         }
-    }
-    
-    static String toString(char[] chars) {
-    	StringBuilder strB = new StringBuilder();
-        for(char c : chars) {
-        	strB.append(c);
-        }
-        return strB.toString();
     }
 }
