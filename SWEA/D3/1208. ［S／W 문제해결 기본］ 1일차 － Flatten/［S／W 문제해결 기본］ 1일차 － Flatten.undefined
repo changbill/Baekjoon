@@ -1,0 +1,55 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+        
+        loop:
+		for(int test = 1; test<=10; test++) {
+            sb.append('#').append(test).append(' ');
+			int dump = Integer.parseInt(br.readLine());
+			int[] arr = new int[100];
+            StringTokenizer st = new StringTokenizer(br.readLine());
+			for(int i =0; i<100; i++) {
+				arr[i] = Integer.parseInt(st.nextToken());
+			}
+
+            int maxIdx = 0;
+            int minIdx = 0;
+			for(int i =0; i<dump; i++) {
+                for(int j = 0; j < 100; j++) {
+                	int tmp = arr[j];
+                    if(arr[maxIdx] < tmp) {
+                    	maxIdx = j;
+                    }
+                    if(arr[minIdx] > tmp) {
+                    	minIdx = j;
+                    }
+                }
+                
+                if(arr[maxIdx] - arr[minIdx] <= 1) {
+                    sb.append(arr[maxIdx] - arr[minIdx]).append('\n');
+                	continue loop;
+                }
+                
+            	arr[maxIdx]--;
+                arr[minIdx]++;
+            }
+            
+            for(int j = 0; j < 100; j++) {
+                int tmp = arr[j];
+                if(arr[maxIdx] < tmp) {
+                    maxIdx = j;
+                }
+                if(arr[minIdx] > tmp) {
+                    minIdx = j;
+                }
+            }
+            
+            sb.append(arr[maxIdx] - arr[minIdx]).append('\n');
+		}
+        System.out.println(sb.toString());
+	}
+}
