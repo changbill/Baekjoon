@@ -10,45 +10,43 @@ public class Solution {
 		for(int test = 1; test<=10; test++) {
             sb.append('#').append(test).append(' ');
 			int dump = Integer.parseInt(br.readLine());
-			int[] arr = new int[100];
+          	int[] countingArr = new int[101];
             StringTokenizer st = new StringTokenizer(br.readLine());
 			for(int i =0; i<100; i++) {
-				arr[i] = Integer.parseInt(st.nextToken());
+				countingArr[Integer.parseInt(st.nextToken())]++;
 			}
 
-            int maxIdx = 0;
-            int minIdx = 0;
-			for(int i =0; i<dump; i++) {
-                for(int j = 0; j < 100; j++) {
-                	int tmp = arr[j];
-                    if(arr[maxIdx] < tmp) {
-                    	maxIdx = j;
-                    }
-                    if(arr[minIdx] > tmp) {
-                    	minIdx = j;
-                    }
+            int max = 0;
+            int min = 0;
+            for(int i = 1; i <= 100; i++) {
+            	if(countingArr[i] != 0) {
+                	min = i;
+                    break;
                 }
-                
-                if(arr[maxIdx] - arr[minIdx] <= 1) {
-                    sb.append(arr[maxIdx] - arr[minIdx]).append('\n');
+            }
+            
+            for(int i = 100; i >= 1; i--) {
+            	if(countingArr[i] != 0) {
+                	max = i;
+                    break;
+                }
+            }
+            
+			for(int i =0; i<dump; i++) {
+                if(max - min <= 1) {
+                    sb.append(max - min).append('\n');
                 	continue loop;
                 }
                 
-            	arr[maxIdx]--;
-                arr[minIdx]++;
+            	countingArr[max]--;
+                countingArr[max-1]++;
+                if(countingArr[max] == 0) max--;
+                countingArr[min]--;
+                countingArr[min+1]++;
+                if(countingArr[min] == 0) min++;
             }
             
-            for(int j = 0; j < 100; j++) {
-                int tmp = arr[j];
-                if(arr[maxIdx] < tmp) {
-                    maxIdx = j;
-                }
-                if(arr[minIdx] > tmp) {
-                    minIdx = j;
-                }
-            }
-            
-            sb.append(arr[maxIdx] - arr[minIdx]).append('\n');
+            sb.append(max - min).append('\n');
 		}
         System.out.println(sb.toString());
 	}
