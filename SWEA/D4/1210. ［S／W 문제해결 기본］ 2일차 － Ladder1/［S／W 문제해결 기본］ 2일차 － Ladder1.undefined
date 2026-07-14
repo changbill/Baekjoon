@@ -1,0 +1,55 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Solution {
+	
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
+        
+		for(int test = 0; test<10; test++) {
+			int T = Integer.parseInt(br.readLine());
+			int[][] map = new int[101][101];
+            int[] start = new int[2];
+            for(int i=1; i<=100; i++) {
+				st = new StringTokenizer(br.readLine());
+				for(int j =1; j<=100; j++) {
+					map[i][j] = Integer.parseInt(st.nextToken());
+                    if(map[i][j] == 2) {
+                    	start[0] = i;
+                        start[1] = j;
+                    }
+				}
+			}
+            
+            while(start[0] > 1) {
+                int r = start[0];
+                int c = start[1];
+            	if(c < 100 && map[r][c+1] == 1) {
+                	while(c < 100 && map[r][c+1] == 1) {
+                    	start[1]++;
+                        c = start[1];
+                    }
+                    start[0]--;
+                    continue;
+                }
+                if(c > 1 && map[r][c-1] == 1) {
+                	while(c > 1 && map[r][c-1] ==1) {
+                    	start[1]--;
+                        c = start[1];
+                    }
+                    start[0]--;
+                    continue;
+                }
+                start[0]--;
+            }
+			
+			sb.append("#"+T+" ").append(start[1]-1).append('\n');
+		}
+        System.out.println(sb.toString());
+	}
+}
