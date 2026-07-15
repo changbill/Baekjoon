@@ -11,29 +11,29 @@ public class Solution {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			int N = Integer.parseInt(st.nextToken());
 			int M = Integer.parseInt(st.nextToken());
-			int[][] Arr = new int[N][N];
+			int[][] Arr = new int[N+1][N+1];
 			int max = 0;
 			
-			for(int i = 0; i<N; i++) {
+			for(int i = 1; i<=N; i++) {
 				StringTokenizer str = new StringTokenizer(br.readLine());
-				for(int j =0; j<N; j++) {
+				for(int j =1; j<=N; j++) {
 					Arr[i][j] = Integer.parseInt(str.nextToken());
 				}
 			}
 			
-			for(int i = 0; i<N-M+1; i++) {
-				for(int j=0; j<N-M+1; j++) {
-					int sum = 0;
-					for(int k = 0; k<M; k++) {
-						for(int l = 0; l<M; l++) {
-							sum += Arr[i+k][j+l];
-						}
-					}
-					if(sum>max) {
-						max = sum;
-					}
-				}
-			}
+            int[][] prefix = new int[N+1][N+1];
+            for(int i = 1; i <= N; i++) {
+            	for(int j = 1; j <= N; j++) {
+                	prefix[i][j] = Arr[i][j] + prefix[i-1][j] + prefix[i][j-1] - prefix[i-1][j-1];
+                }
+            }
+            
+            for(int i =1; i <= N-M+1; i++) {
+            	for(int j = 1; j <= N-M+1; j++) {
+                    int now = prefix[i+M-1][j+M-1] - prefix[i-1][j+M-1] - prefix[i+M-1][j-1] + prefix[i-1][j-1];
+                	max = Math.max(max, now);
+                }
+            }
 			
             sb.append("#"+t+" "+max).append('\n');
 		}
