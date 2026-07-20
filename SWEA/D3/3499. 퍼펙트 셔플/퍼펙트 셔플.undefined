@@ -1,0 +1,33 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		
+		int T = Integer.parseInt(br.readLine());
+		for (int t = 1; t <= T; t++) {
+			int N = Integer.parseInt(br.readLine());
+			String[] Arr = new String[N];
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			
+			sb.append("#"+t+" ");
+			
+			for(int i = 0; i<N; i++) {
+				Arr[i] = st.nextToken();
+			}
+			
+            int odd = N % 2 == 0 ? N/2 : N/2 + 1;
+			for(int i = 0; i < odd; i++) {
+            	sb.append(Arr[i] + " ");
+                if(i == odd - 1 && N % 2 != 0) break;
+                sb.append(Arr[i+odd] + " ");
+            }
+			sb.append("\n");
+		}
+		
+		System.out.println(sb.toString());
+	}
+}
