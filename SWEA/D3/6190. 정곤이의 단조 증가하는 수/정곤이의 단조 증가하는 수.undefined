@@ -24,8 +24,7 @@ public class Solution {
             for(int i = N-1; i > 0; i--) {
             	for(int j = i-1; j >= 0; j--) {
                 	int num = NArr[i] * NArr[j];
-                    String numStr = Integer.toString(num);
-                    if(isDanjo(numStr)) {
+                    if(isDanjo(num)) {
                     	max = Math.max(max, num);
                     }
                 }
@@ -36,12 +35,13 @@ public class Solution {
         System.out.println(sb.toString());
     }
     
-    static boolean isDanjo(String numStr) {
-        int prev = 0;
-    	for(int i = 0; i < numStr.length(); i++) {
-            int now = numStr.charAt(i);
-        	if(prev <= now) {
-                prev = now;
+    static boolean isDanjo(int num) {
+        int prev = Integer.MAX_VALUE;
+        while(num > 0) {
+        	int now = num % 10;
+            if(now <= prev) {
+            	prev = now;
+                num /= 10;
             } else {
             	return false;
             }
