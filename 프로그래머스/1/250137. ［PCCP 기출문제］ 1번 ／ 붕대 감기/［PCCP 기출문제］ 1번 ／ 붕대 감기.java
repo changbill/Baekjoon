@@ -3,27 +3,25 @@ class Solution {
         int t = bandage[0];
         int healPerSec = bandage[1];
         int extraHeal = bandage[2];
-        int attacksLen = attacks.length;
-        int now = 0;
         int maxHealth = health;
-        int healStack = 0;
-        for(int i = 0; i < attacksLen; i++) {
-            int attackTime = attacks[i][0];
-            for(int j = now; j < attackTime; j++) {
-                health += healPerSec;
-                healStack++;
-                if(healStack == t) {
-                    health += extraHeal;
-                    healStack = 0;
-                }
-            }
-            health = Math.min(maxHealth, health);
-            health -= attacks[i][1];
-            healStack = 0;
-            now = attackTime+1;
+        
+        int prevTime = 0;
+        for(int[] attack : attacks) {
+            int time = attack[0];
+            int damage = attack[1];
+            
+            int diff = time - prevTime - 1;
+            int heal = healPerSec * diff + (diff / t) * extraHeal;
+            
+            health += heal;
+            health = Math.min(health, maxHealth);
+            
+            health -= damage;
             if(health <= 0) {
                 return -1;
             }
+            System.out.println(health);
+            prevTime = time;
         }
         
         int answer = health;
