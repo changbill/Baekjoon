@@ -1,87 +1,87 @@
 import java.util.*;
 
 class Solution {
-    int[][][] robots;
-    public int solution(int[][] points, int[][] routes) {
-        int robotCnt = routes.length;
-        robots = new int[robotCnt][20001][2];
-        int pointsCnt = points.length;
-        int maxTime = 0;
-        
-        for(int i = 0; i < robotCnt; i++) {
-            List<Integer> spots = new ArrayList<>();
-            for(int j = 0; j < routes[i].length; j++) {
-                spots.add(routes[i][j]);
+    // points[포인트번호+1] = {r, c}
+    // routes[로봇번호+1][방문순서+1] == 포인트번호+1
+    // 경로는 항상 같으므로 현재 좌표와 목적지를 저장하고 있으면 이동할 수 있다.
+    int[][] points, routes;
+    public int solution(int[][] tPoints, int[][] tRoutes) {
+        int pointLen = tPoints.length;
+        points = new int[pointLen][2];
+        for(int i = 0; i < pointLen; i++) {
+            points[i][0] = tPoints[i][0]-1;
+            points[i][1] = tPoints[i][1]-1;
+        }
+        int robotsLen = tRoutes.length;
+        int pointNumLen = tRoutes[0].length;
+        routes = new int[robotsLen][pointNumLen];
+        for(int i = 0; i < robotsLen; i++) {
+            for(int j = 0; j < pointNumLen; j++) {
+                routes[i][j] = tRoutes[i][j] - 1;
             }
-            int start = spots.get(0);
-            int time = 0;
-            for(int j = 1; j < spots.size(); j++) {
-                int to = spots.get(j);
-                int sr = points[start-1][0];
-                int sc = points[start-1][1];
-                int tr = points[to-1][0];
-                int tc = points[to-1][1];
-                time = move(i, sr, sc, tr, tc, time);
-                start = to;
-            }
-            maxTime = Math.max(maxTime, time);
         }
         
-        boolean[][] visited, checked;
-        int cnt = 0;
-        for(int i = 0; i <= maxTime; i++) {
-            visited = new boolean[101][101];
-            checked = new boolean[101][101];
-            boolean flag = false;
-            for(int j = 0; j < robotCnt; j++) {
-                if(robots[j][i][0] == 0) {
-                    continue;
-                }
-                flag = true;
-                int nr = robots[j][i][0];
-                int nc = robots[j][i][1];
-                if(!visited[nr][nc]) {
-                    visited[nr][nc] = true;
-                    continue;
-                }
-                if(!checked[nr][nc]) checked[nr][nc] = true;
-            }
-            if(!flag) break;
+        int[] nr = new int[robotsLen];
+        int[] nc = new int[robotsLen];
+        int[] pointNum = new int[robotsLen];    // 현재 몇번째 포인트 번호
+        int cnt = 0;    // 충돌위험 개수
+        int activeRobot = robotsLen;
+        for(int i = 0; i < robotsLen; i++) {
+            int p = routes[i][0];
+            int sr = points[p][0];
+            int sc = points[p][1];
+            nr[i] = sr;
+            nc[i] = sc;
+            pointNum[i] = 1;
+        }
+        
+        boolean[] finished = new boolean[robotsLen];
+        while(activeRobot > 0) {
+            int[][] count = new int[100][100];
             
-            for(int j = 1; j <= 100; j++) {
-                for(int k = 1; k <= 100; k++) {
-                    if(checked[j][k]) {
-                        cnt++;
+            for(int i = 0; i < robotsLen; i++) {
+                if(finished[i]) continue;
+                count[nr[i]][nc[i]]++;
+            }
+            
+            for(int i = 0; i < 100; i++) {
+                for(int j = 0; j < 100; j++) {
+                    if(count[i][j] >= 2) cnt++;
+                }
+            }
+            
+            for(int i = 0; i < robotsLen; i++) {
+                if(finished[i]) continue;
+                
+                if (pointNum[i] == pointNumLen) {
+                    finished[i] = true;
+                    activeRobot--;
+                    continue;
+                }
+                
+                int targetPoint = routes[i][pointNum[i]];
+                int dr = points[targetPoint][0];
+                int dc = points[targetPoint][1];
+                if(dr != nr[i]) {
+                    if(dr > nr[i]) {
+                        nr[i]++;
+                    } else {
+                        nr[i]--;
                     }
+                } else if(dc != nc[i]) {
+                    if(dc > nc[i]) {
+                        nc[i]++;
+                    } else {
+                        nc[i]--;
+                    }
+                } 
+                
+                if(nr[i] == dr && nc[i] == dc){
+                    pointNum[i]++;
                 }
             }
         }
         
-        int answer = cnt;
-        return answer;
-    }
-    
-    int move(int robotNum, int sr, int sc, int tr, int tc, int time) {
-        robots[robotNum][time][0] = sr;
-        robots[robotNum][time][1] = sc;
-        int wholeTime = Math.abs(sr - tr) + Math.abs(sc - tc);
-        for(int i = 1; i <= wholeTime; i++) {
-            if(sr != tr) {
-                if(sr > tr) sr--;
-                else sr++;
-                robots[robotNum][time+i][0] = sr;
-                robots[robotNum][time+i][1] = sc;
-                continue;
-            } 
-            
-            if(sc != tc) {
-                if(sc > tc) sc--;
-                else sc++;
-                robots[robotNum][time+i][0] = sr;
-                robots[robotNum][time+i][1] = sc;
-                continue;
-            }
-        }
-        return time+wholeTime;
+        return cnt;
     }
 }
