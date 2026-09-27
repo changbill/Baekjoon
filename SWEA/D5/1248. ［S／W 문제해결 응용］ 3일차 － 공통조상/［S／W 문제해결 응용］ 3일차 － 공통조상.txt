@@ -1,0 +1,75 @@
+import java.util.*;
+import java.io.*;
+
+class Solution
+{
+    static class Node {
+        int parent;
+        List<Integer> children = new ArrayList<>();
+    }
+    static Node[] nodes;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+
+        int T = Integer.parseInt(br.readLine());
+        for(int t = 1; t <= T; t++) {
+            sb.append('#').append(t).append(' ');
+            st = new StringTokenizer(br.readLine());
+            int V = Integer.parseInt(st.nextToken());
+            nodes = new Node[V+1];
+            for(int i = 1; i <= V; i++) {
+                nodes[i] = new Node();
+            }
+            int E = Integer.parseInt(st.nextToken());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            st = new StringTokenizer(br.readLine());
+            for(int i = 0; i < E; i++) {
+                int p = Integer.parseInt(st.nextToken());
+                int c = Integer.parseInt(st.nextToken());
+                nodes[p].children.add(c);
+                nodes[c].parent = p;
+            }
+
+            List<Integer> aParents = find(a);
+            List<Integer> bParents = find(b);
+            for(int i = 0; i < aParents.size() && i < bParents.size(); i++) {
+                if(!aParents.get(i).equals(bParents.get(i))) {
+                    int tmp = aParents.get(i-1);
+                    int treeSize = cntTreeSize(aParents.get(i-1));
+                    sb.append(tmp).append(' ').append(treeSize).append('\n');
+                    break;
+                }
+            }
+            int ptmp = Math.min(aParents.size()-1, bParents.size()-1);
+            if(aParents.get(ptmp) == bParents.get(ptmp)) {
+                sb.append(aParents.get(ptmp)).append(' ').append(cntTreeSize(aParents.get(ptmp))).append('\n');
+            }
+        }
+        System.out.println(sb.toString());
+    }
+
+    static List<Integer> find(int child) {
+        if(child == 1) {
+            List<Integer> list = new ArrayList<>();
+            list.add(1);
+            return list;
+        }
+        int parent = nodes[child].parent;
+        List<Integer> list = find(parent);
+        list.add(child);
+        return list;
+    }
+
+    static int cntTreeSize(int parent) {
+        List<Integer> list = nodes[parent].children;
+        int sum = 0;
+        for(int i = 0; i < list.size(); i++) {
+            sum += cntTreeSize(list.get(i));
+        }
+        return sum + 1;
+    }
+}
